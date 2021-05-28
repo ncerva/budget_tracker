@@ -3,19 +3,21 @@
     "short_name": "budget_tracker",
     "icons": [
       {
-        "src": "icons/icon-192x192.png",
+        "src": "/icons/icon-192x192.png",
         "sizes": "192×169",
         "type": "image/png",
         "purpose": "maskable"
       },
       {
-        "src": "icons/icon-512x512.png",
+        "src": "/icons/icon-512x512.png",
         "sizes": "512×452",
         "type": "image/png",
         "purpose": "maskable"
   }
 ],
 
-"start_url": "/",
-"display": "standalone"
+"theme_color": "#ffffff",
+  "background_color": "#ffffff",
+  "start_url": "/",
+  "display": "standalone"
 }
