@@ -10,13 +10,15 @@ const FILES_TO_CACHE = [
 ];
 
 const CACHE_NAME = "static-cache-v2";
-const DATA_CACHE_NAME = "data-cache-v1";
+const DATA_CACHE_NAME = "data-cache-v2";
 
 //installing service worker
 self.addEventListener("install", function (evt) {
     evt.waitUntil(
-        caches.open(DATA_CACHE_NAME).then((cache) =>
-        cache.add("/api/images"))
+        caches.open(CACHE_NAME).then(cache => {
+        cache.add("/api/images")
+        return cache.addAll(FILES_TO_CACHE);
+        })
     );
 
     //precaching static assets 
@@ -46,11 +48,11 @@ self.addEventListener("activate", function(evt) {
     self.clients.claim();
 });
 
-self.addEventListener("fetch", function(evt){
+self.addEventListener("fetch", evt => {
     if(evt.request.url.includes("/api/")) {
         evt.respondwith(
             caches.open(DATA_CACHE_NAME).then(cache => {
-                return detch(evt.request)
+                return fetch(evt.request)
                 .then(response => {
                     if (response.status === 200) {
                         cache.put(evt.request.url, response.clone());
@@ -65,9 +67,11 @@ self.addEventListener("fetch", function(evt){
         return;
     }
 
-    evt.respondwith(
-        caches.match(evt.request).then(function(response) {
+    evt.respondWith(
+        caches.open(CACHE_NAME).then( cache => {
+          return cache.match(evt.request).then(response => {
             return response || fetch(evt.request);
+          });
         })
-    );
-});
+      );
+    });
